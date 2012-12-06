@@ -1,5 +1,5 @@
 set :default_environment, {
-  'PATH' => "/users/jac244/.rvm/gems/ruby-1.9.3-p194/bin:/user/jac244/.rvm/bin:/users/jac244/.rvm/bin:$PATH",
+  'PATH' => "/users/jac244/.rvm/gems/ruby-1.9.3-p194/bin:/users/jac244/.rvm/gems/ruby-1.9.3-p194/bin/rake:/users/jac244/.rvm/bin:/users/jac244/.rvm/bin:$PATH",
 #  'RUBY_VERSION' => 'ruby 1.9.3-p194',
 # 'GEM_HOME'     => '/users/jac244/.rvm/gems/ruby-1.9.3-p194/gems',
 #  'GEM_PATH'     => '/users/jac244/.rvm/gems/ruby-1.9.3-p194',
