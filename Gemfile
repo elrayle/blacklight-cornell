@@ -64,8 +64,9 @@ gem 'jquery-rails'
 # Deploy with Capistrano
 gem 'capistrano'
 gem 'capistrano-ext'
+gem 'rvm-capistrano'
 # To use debugger
-# gem 'debugger'
+gem 'debugger'
 
 gem "unicode", :platforms => [:mri_18, :mri_19]
 gem "devise"

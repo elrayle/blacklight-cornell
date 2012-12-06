@@ -7,6 +7,7 @@
 #}
 require 'bundler/capistrano'
 require 'capistrano/ext/multistage'
+require 'capistrano/rvm'
 set :application, "blacklight-cornell"
 set :scm, :git
 set :repository,  "git@git.library.cornell.edu:/blacklight-cornell.git"
