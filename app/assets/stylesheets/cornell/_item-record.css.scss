@@ -55,10 +55,28 @@ dl.dl-horizontal {
 		overflow: visible;
 		text-overflow: inherit;
 		white-space: normal;
-		}
+	}
 	dd {
 		margin-left: 130px;
 		font-size: .875em;
+		display: table;
+		// The long URL wrapping saga
+		// -- more juicy details here:
+		//    http://css-tricks.com/snippets/css/prevent-long-urls-from-breaking-out-of-container
+		//    http://blog.kenneth.io/blog/2012/03/04/word-wrapping-hypernation-using-css
+		-ms-word-break: break-all;
+		// This causes Mozilla to break mid-word and then we would need hyphens
+		// -- we can cover this in CSS, but Mozilla is good without this so why
+		// -- introduce hyphens if we don't need them?
+		// word-break: break-all;
+
+		// Non standard for webkit
+		word-break: break-word;
+
+		// These don't seem to make a difference for Webkit/Mozilla
+		// -- keeping them around in case they prove useful for IE
+		// overflow-wrap: break-word;
+		// word-wrap: break-word;
 		ul {
 			list-style: none;
 			margin: 0;
