@@ -60,4 +60,32 @@ class Request
 		[9].include? loan_code
 	end
 
+	def item_status item_status
+	    if item_status.include? 'Not Charged'
+	      'Not Charged'
+	    elsif item_status =~ /^Charged/
+	      'Charged'
+	    elsif item_status =~ /Renewed/
+	      'Charged'
+	    elsif item_status.include? 'Requested'
+	      'Requested'
+	    elsif item_status.include? 'Missing'
+	      'Missing'
+	    elsif item_status.include? 'Lost'
+	      'Lost'
+	    else
+	      item_status
+	    end
+  	end
+
+  	############  Return eligible delivery services for request #################
+  	def eligible_services
+
+  		return nil unless self.bibid
+
+  		'test'
+
+  	end
+
+
 end

@@ -101,6 +101,67 @@ require 'spec_helper'
 
 		end
 
+		context "Getting item status" do
+
+			describe "get_item_status" do
+
+				let(:rc) { FactoryGirl.create(:request) }
+
+				it "returns 'Not Charged' if item status includes 'Not Charged'" do
+					result = rc.item_status 'status is Not Charged in this case'
+					result.should == 'Not Charged'
+				end
+
+				it "returns 'Charged' if item status includes a left-anchored 'Charged'" do
+					result = rc.item_status 'status is Charged in this case'
+					result.should_not == 'Charged'
+				end
+
+				it "returns 'Charged' if item status includes a left-anchored 'Charged'" do
+					result = rc.item_status 'Charged in this case'
+					result.should == 'Charged'
+				end
+
+				it "returns 'Charged' if item status includes 'Renewed'" do
+					result = rc.item_status 'status is Renewed in this case'
+					result.should == 'Charged'
+				end
+
+				it "returns 'Requested' if item status includes 'Requested'" do
+					result = rc.item_status 'status is Requested in this case'
+					result.should == 'Requested'
+				end
+
+				it "returns 'Missing' if item status includes 'Missing'" do
+					result = rc.item_status 'status is Missing in this case'
+					result.should == 'Missing'
+				end
+
+				it "returns 'Lost' if item status includes 'Lost'" do
+					result = rc.item_status 'status is Lost in this case'
+					result.should == 'Lost'
+				end
+
+				it "returns the passed parameter if the status isn't recognized" do
+					result = rc.item_status 'status is Leaving on a Jet Plane in this case'
+					result.should == 'status is Leaving on a Jet Plane in this case'
+				end
+
+			end
+		end
+
+	end
+
+	context "Getting eligible services" do
+
+		describe "eligible_services" do
+
+			it "returns nil if the bibid is invalid" do
+				FactoryGirl.build(:request, bibid: nil).eligible_services.should == nil
+			end
+
+		end
+
 	end
 
  end
