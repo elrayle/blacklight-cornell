@@ -60,6 +60,7 @@ class Request
 		[9].include? loan_code
 	end
 
+	# Locate and translate the actual item status from the text string in the holdings data
 	def item_status item_status
 	    if item_status.include? 'Not Charged'
 	      'Not Charged'
