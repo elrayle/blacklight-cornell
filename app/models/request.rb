@@ -1,5 +1,6 @@
 class Request
 	include ActiveModel::Validations
+	include Cornell::LDAP
 
 	attr_accessor :bibid, :holdings_data
 	validates_presence_of :bibid
