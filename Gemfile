@@ -41,6 +41,7 @@ group :development, :test do
   gem 'database_cleaner'
   gem 'webrat'
   gem 'guard-rspec'
+  gem 'factory_girl_rails'
 end
 
 group :test do
