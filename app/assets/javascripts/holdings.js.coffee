@@ -4,6 +4,14 @@
   var k=[],p;
   for (p in o) if (Object.prototype.hasOwnProperty.call(o,p)) k.push(p);
   return k;
+}
+if (typeof console == "undefined") {
+  this.console = {
+    log: function() {},
+    info: function() {},
+    error: function() {},
+    warn: function() {}
+  };
 }`
 holdings =
   # Initial setup
