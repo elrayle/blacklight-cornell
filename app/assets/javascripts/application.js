@@ -30,3 +30,7 @@
 //
 //= require spin.min.js
 //= require jquery.spin.js
+//= require jquery.inview.js
+//= require verge.js
+//
+
