@@ -1,7 +1,8 @@
 <div class="pull-right hidden-phone select-all">
 	<% params[:_method] = "POST" %>
+	<%= javascript_include_tag "check_uncheck_all.js" %>
 <% if current_or_guest_user %>
-            <% send_to_bookmarks = false %>
+            <% send_to_bookmarks = true %>
             <%= hidden_field_tag "num_rows", @response.rows %>
 			<% @response.docs.each do |doc| %>
     			<%= hidden_field_tag "doc_ids[]", doc[:id] %>
@@ -10,25 +11,26 @@
                 <% end %>
 			<% end %>            
 
-  <% unless send_to_bookmarks %>
-      <%= form_tag( "bookmarks/update", :method => "update", :class => "bookmark_toggle_all", "data-doc-id" => @response.docs) do %>
+  <% unless send_to_bookmarks == true %>
+      <%= form_tag( "bookmarks/update", :onclick => "checkAll(" + @response.docs.to_json + ", 'add');", :method => "update", :class => "bookmark_toggle_all", "data-doc-id" => @response.docs) do %>
       <%= hidden_field_tag "num_rows", @response.rows %>
+	<%#= javascript_include_tag "check_uncheck_all.js" %>
 			<% @response.docs.each do |doc| %>
     			<%= hidden_field_tag "doc_ids[]", doc[:id] %>
 			<% end %>            
-
-        <%= submit_tag(t('blacklight.bookmarks.add.button'), :id => "bookmark_add_all", :class => "bookmark_add") %>
+         
+        <%#= submit_tag(t('blacklight.bookmarks.add.button'), :id => "bookmark_add_all", :class => "bookmark_add") %>
       <% end %>
-
   <% else %>
 
-      <%= form_tag( "bookmarks/destroy", :method => "destroy", :class => "bookmark_toggle_all", "data-doc-id" => @response.docs) do %>
+      <%= form_tag( "bookmarks/destroy", :onclick => "checkAll(" + @response.docs.to_json + ", 'delete');", :method => "destroy", :class => "bookmark_toggle_all", "data-doc-id" => @response.docs) do %>
       <%= hidden_field_tag "num_rows", @response.rows %>
+	<%#= javascript_include_tag "check_uncheck_all.js" %>
 			<% @response.docs.each do |doc| %>
     			<%= hidden_field_tag "doc_ids[]", doc[:id] %>
 			<% end %>            
 
-        <%= submit_tag(t('blacklight.bookmarks.remove.button'), :id => "bookmark_delete_all", :class => "bookmark_remove") %>
+        <%#= submit_tag(t('blacklight.bookmarks.remove.button'), :id => "bookmark_delete_all", :class => "bookmark_remove") %>
       <% end %>
 
   <% end %>
