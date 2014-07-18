@@ -66,4 +66,13 @@ class Hash
   
 end
 
-
+module Blacklight::Solr
+  class FacetPaginator
+    def prev_page
+      current_page - 1 unless first_page?
+    end
+    def next_page
+      current_page + 1 unless last_page?
+    end
+  end
+end
