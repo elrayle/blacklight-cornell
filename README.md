@@ -1,6 +1,4 @@
-<a href='https://newjenkins.library.cornell.edu/job/blacklight-cornell/'><img src='https://newjenkins.library.cornell.edu/buildStatus/icon?job=blacklight-cornell'></a>
 
-[![Build Status](https://newjenkins.library.cornell.edu/buildStatus/icon?job=blacklight-cornell)](https://newjenkins.library.cornell.edu/job/blacklight-cornell/)
 == Welcome to Rails
 
 Rails is a web-application framework that includes everything needed to create
