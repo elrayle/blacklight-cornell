@@ -159,6 +159,28 @@ Feature: Results list
     Then I should get results
     And I should not see the text 'Order Information'
 
+  # DISCOVERYACCESS-987
+  @DISCOVERYACCESS-987
+  @availability
+  @javascript
+  Scenario: As a user, I can see the item permanent location when that overrides holding location 
+    Given I am on the home page
+    When I fill in the search box with '"Laws of the state of New-York comprising the constitution, and the acts of the Legislature since the revolution, from the first to the twelfth session, inclusive"'
+    And I press 'search'
+    Then I should get results
+    And I should not see the text 'Kroch'
+
+  # DISCOVERYACCESS-987
+  @DISCOVERYACCESS-987
+  @availability
+  @javascript
+  Scenario: As a user, I can see the item permanent location when that overrides holding location 
+    Given I am on the home page
+    When I fill in the search box with '"Laws of the state of New-York comprising the constitution, and the acts of the Legislature since the revolution, from the first to the twelfth session, inclusive"'
+    And I press 'search'
+    Then I should get results
+    And I should see the text 'Law Library (Myron Taylor Hall) Rare Books'
+
   # DISCOVERYACCESS-1407
   @DISCOVERYACCESS-1407
   @availability
