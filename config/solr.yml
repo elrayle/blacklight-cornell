@@ -14,7 +14,7 @@ integration:
   url: http://da-dev-solr.library.cornell.edu/solr/blacklight
 
 development:
-  url: http://da-dev-solr.library.cornell.edu/solr/blacklight
+  url: http://da-dev-solr.library.cornell.edu/solr/Jan
 
 test: &test
   url: http://da-dev-solr.library.cornell.edu/solr/blacklight
