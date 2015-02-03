@@ -1,4 +1,4 @@
-# -*- encoding : utf-8 -*-
+ # -*- encoding : utf-8 -*-
 class CatalogController < ApplicationController
   include Blacklight::Catalog
   include BlacklightCornell::CornellCatalog
@@ -250,7 +250,7 @@ class CatalogController < ApplicationController
     config.add_facet_field 'fast_geo_facet', :label => 'Subject: Region', :limit => 5
     config.add_facet_field 'fast_era_facet', :label => 'Subject: Era', :limit => 5
     config.add_facet_field 'subject_content_facet', :label => 'Fiction/Non-Fiction', :limit => 5
-    config.add_facet_field 'lc_1letter_facet', :label => 'Call Number', :limit => 5
+    config.add_facet_field 'lc_alpha_facet', :label => 'Call Number', :limit => 5
     config.add_facet_field 'location_facet', :label => 'Library Location', :limit => 5
     config.add_facet_field 'hierarchy_facet', :hierarchy => true
     # config.add_facet_field 'facet', :multiple => true
