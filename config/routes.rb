@@ -30,6 +30,9 @@ BlacklightCornell::Application.routes.draw do
   
   match '/aeon/:bibid' => 'aeon#request_aeon', :as => 'request_aeon', :via => [:post, :put, :get]
   get '/databases' => 'databases#index', :as => 'databases_index'
+  get '/digitalcollections' => 'digitalcollections#index', :as => 'digitalcollections_index'
+    get '/digitalcollections/searchdigreg/' => 'digitalcollections#searchdigreg', :as => 'digitalcollections_searchdigreg'
+
   get '/databases/title/:alpha' => 'databases#title', :as => 'databases_title'
   get '/databases/searchdb/' => 'databases#searchdb', :as => 'databases_searchdb'
   get '/databases/subject/:q' => 'databases#subject', :as => 'databases_subject'
