@@ -4,18 +4,101 @@ Feature: Item view
   As a user
   I want to see details from the item's catalog record, holdings, and availability.
 
+  @allow-rescue
+  @e404
+  Scenario: goto an invalid page 
+  	When I go to literal abcdefg 
+  	Then I should see an error 
+        Then it should have link "mlink" with value "mailto:cul-dafeedback-l@cornell.edu"
+
   @availability
   Scenario: View an items holdings
   	Given I request the item view for 4759
   	Then I should see the label 'Request'
 
+  @aeon
+  @rmcnoitems
+  Scenario: View an items holdings
+  	Given I request the item view for 8753977 
+  	Then I should see the label 'Request'
+
+  @aeon
+  Scenario: View an items holdings, and request from aeon
+  	Given I request the item view for 2083253 
+        And click on link "Request"
+        Then I should see the label 'Upton, G. B. (George Burr), 1882-1942' 
+
+  @aeon
+  Scenario: View an items holdings, and request from aeon
+  	Given I request the item view for 2083253 
+        And click on link "Request"
+        Then I should see the label '16-5-268 This rare item may be delivered only to the RMC Reading Room.'
+
+  @aeon
+  Scenario: View an items holdings, and request from aeon
+  	Given I request the item view for 2083253 
+        Then it should have link "Request" with value "/aeon/2083253"  
+
+
   # DISCOVERYACCESS-136
+  @DISCOVERYACCESS-136
   Scenario: As a user, the author's name in an item record is clickable and produces a query resulting in a list of works by that author.
     Given I request the item view for 6041
     And click on link "Catholic Church. Pope (1939-1958 : Pius XII) Summi pontificatus (20 Oct. 1939) English."
     Then it should contain "author" with value "Catholic Church. Pope (1939-1958 : Pius XII) Summi pontificatus (20 Oct. 1939) English."
 
   # DISCOVERYACCESS-137
+  @javascript 
+  @DISCOVERYACCESS-137
+  Scenario: As a user, the subject headings in an item record are clickable and produces a query resulting in a list of items.
+    Given I request the item view for 1630516 
+    And click on link "English poetry"
+    Then it should contain filter "Subject" with value "English poetry"
+
+  @DISCOVERYACCESS-137
+  Scenario: As a user, the subject headings in an item record are clickable and are hierarchical.
+    Given I request the item view for 1630516 
+    And click on link "19th century"
+    Then it should contain filter "Subject" with value "English poetry 19th century"
+
+  # DISCOVERYACCESS-138
+  Scenario: As a user, the "other names" in an item record is clickable and produces a query resulting in a list of items related to the other name chosen.
+    Given I request the item view for 4442
+    And click on link "Peabody, William Bourn Oliver, 1799-1847"
+    Then I should see the label 'Lives of Alexander Wilson and Captain John Smith'
+
+  # DISCOVERYACCESS-142
+  Scenario: As a user I can see the publication date, publisher and place of publication on one line in the item record view.
+    Given I request the item view for 3749
+    Then it should contain "pub_info" with value "Berlin ; New York : Springer-Verlag, c1985."
+
+  @aeon
+  Scenario: View an items holdings, and request from aeon
+  	Given I request the item view for 2083253 
+        And click on link "Request"
+        Then I should see the label 'Upton, G. B. (George Burr), 1882-1942' 
+
+  @aeon
+  Scenario: View an items holdings, and request from aeon
+  	Given I request the item view for 2083253 
+        And click on link "Request"
+        Then I should see the label '16-5-268 This rare item may be delivered only to the RMC Reading Room.'
+
+  @aeon
+  Scenario: View an items holdings, and request from aeon
+  	Given I request the item view for 2083253 
+        Then it should have link "Request" with value "/aeon/2083253"  
+
+
+  # DISCOVERYACCESS-136
+  @DISCOVERYACCESS-136
+  Scenario: As a user, the author's name in an item record is clickable and produces a query resulting in a list of works by that author.
+    Given I request the item view for 6041
+    And click on link "Catholic Church. Pope (1939-1958 : Pius XII) Summi pontificatus (20 Oct. 1939) English."
+    Then it should contain "author" with value "Catholic Church. Pope (1939-1958 : Pius XII) Summi pontificatus (20 Oct. 1939) English."
+
+  # DISCOVERYACCESS-137
+  @javascript 
   @DISCOVERYACCESS-137
   Scenario: As a user, the subject headings in an item record are clickable and produces a query resulting in a list of items.
     Given I request the item view for 1630516 
@@ -100,7 +183,7 @@ Feature: Item view
   Scenario: As a user I can see the availability for an item at an overriden location but
   when all items have an overriden location that location takes over for the main location 
     Given I request the item view for 2378252 
-    Then I should see the "fa-on-site" class 2 times
+    Then I should see the "fa-on-site" class 3 times
 
   # when there is a perm location, and temp and all items for holding are at temp
   # then the temp location should be shown INSTEAD of permanent so "temporarily shelved
@@ -166,6 +249,13 @@ Feature: Item view
     Given I request the item view for 5380314  
     Then I should not see the label 'Call number'
 
+  #see holdings in Classic Catalog, but the space is just blank under “Availability” for this title in New Catalog.
+  @availability
+  @DISCOVERYACCESS-1558 
+  Scenario: As a user I can see the information about an  item when info in solr is slightly out of date
+    Given I request the item view for 8688843 
+    Then I should see the label 'HD58.7 .S633 2014'
+ 
   # Availability for a lost item, and one available. 
   @availability
   Scenario: As a user I can see the availability for an lost item (status 15) (Polymer Chemistry)
@@ -179,11 +269,11 @@ Feature: Item view
     Given I request the item view for 18583 
     Then I should see the labels 'Missing'
 
-  # Availability for an In transit item Managerial accounting 
+  # Availability for an In transit item Jean-Léon Gérôme (status 10) 
   @availability @intransit
   @DISCOVERYACCESS-1483
   Scenario: As a user I can see the availability for an In transit item
-    Given I request the item view for 8758143 
+    Given I request the item view for 114103 
     Then I should see the labels 'In transit'
 
   # Availability for an In transit item Die Zeit meines Abschieds ist vorhanden (status 8) 
@@ -259,15 +349,17 @@ Feature: Item view
     Then I should not see the label 'Library Technical Services Review Shelves'
 
   # DISCOVERYACCESS-1430 -- be more explicit in saying what is available. 
+  # Annotated Hobbit -- two locations, 1 copy at each.
   @availability
   @holdings
   @DISCOVERYACCESS-1430
   @DISCOVERYACCESS-1483
   Scenario: As a user I can see the exactly what copy is available 
-    Given I request the item view for 5545750
+    Given I request the item view for 1535861
     Then I should see the label '1 copy'
 
   # DISCOVERYACCESS-1430 -- be more explicit in saying what is available. 
+  # Fundamentals of corporate finance Stephen A. Ross, Randolph W. Westerfield, Bradford D. Jordan
   @availability
   @holdings
   @DISCOVERYACCESS-1430
