@@ -22,6 +22,8 @@ gem 'blacklight_unapi'
 gem 'kaminari', '0.15.0'
 
 gem 'blacklight_google_analytics'
+gem 'blacklight-hierarchy'
+
 gem 'json'
 gem 'httpclient'
 gem 'haml'
