@@ -96,7 +96,7 @@ gem 'font-awesome-rails'
 gem 'blacklight_cornell_requests', :git => 'git@github.com:cul-it/blacklight-cornell-requests.git', :branch => 'bl5'
 
 #gem 'blacklight_cornell_requests', :path =>  '/libweb/dev/git-src/wtf/wtf2/febsprint/blacklight-cornell-requests'
-
+gem 'blacklight-hierarchy'
 gem 'bento_search'
 gem 'celluloid'  # Required for bento_search multisearcher
 # gem 'worldcat'
