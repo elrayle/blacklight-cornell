@@ -190,7 +190,8 @@ class CatalogController < ApplicationController
         'url_access_display' => { :label => 'Access content' },
         'url_other_display'  => { :label => 'Other online content' },
         'url_bookplate_display'  => { :label => 'Bookplate' },
-        'url_findingaid_display'  => { :label => 'Finding Aid' }
+        'url_findingaid_display'  => { :label => 'Finding Aid' },
+        'other_availability_piped'  => { :label => 'Other Availability' }
 
     }
 

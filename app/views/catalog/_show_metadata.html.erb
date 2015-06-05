@@ -64,6 +64,19 @@
     <%= render "holdings"  %>
     </div>
 
+    <% other_forms = render_display_link :document => @document, :field =>  'other_availability_piped', :format => 'raw' %>
+
+    <% if other_forms %>
+    <h3>Also available</h3>
+    <ul>
+    <% other_forms.each do |link,label| %>
+    <li>
+    <%= link_to link, label %>
+    </li>
+    <% end %>
+    </ul>
+    <%end%>
+
     <% access_restrictions = render_document_show_field_value :document => @document, :field => 'restrictions_display' %>
     <% if access_restrictions.present? %>
       <span class="access-restriction">
@@ -81,5 +94,6 @@
         <span class="worldcat-search"><i class="fa fa-search"></i> Search  <a href="http://cornell.worldcat.org/oclc/<%= oclc_number.gsub(/\(.*?\)/, "") %>/editions?se=loc&editionsView=true">Libraries Worldwide</a> for a print copy.</span>
         <% end %>
     <% end %>
+
   </div>
 </div>
