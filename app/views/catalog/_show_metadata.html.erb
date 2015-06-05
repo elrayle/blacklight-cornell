@@ -63,19 +63,7 @@
     <div class="holdings" data-bibid="<%= @document.id.to_s %>">
     <%= render "holdings"  %>
     </div>
-
-    <% other_forms = render_display_link :document => @document, :field =>  'other_availability_piped', :format => 'raw' %>
-
-    <% if other_forms %>
-    <h3>Also available</h3>
-    <ul>
-    <% other_forms.each do |link,label| %>
-    <li>
-    <%= link_to link, label %>
-    </li>
-    <% end %>
-    </ul>
-    <%end%>
+   
 
     <% access_restrictions = render_document_show_field_value :document => @document, :field => 'restrictions_display' %>
     <% if access_restrictions.present? %>
@@ -87,6 +75,20 @@
 
     <span class="blacklight-url_access_display"></span>
     <%= @hide_status %>
+
+     <% if !render_document_show_field_value(:document => @document, :field =>  'other_availability_piped').blank? %>
+
+    <% other_forms = render_display_link :document => @document, :field =>  'other_availability_piped', :format => 'raw' %>
+
+    <h3>Also available</h3>
+    <ul>
+    <% other_forms.each do |link,label| %>
+    <li>
+    <%= link_to link, label %>
+    </li>
+    <% end %>
+    </ul>
+    <%end%>
 
     <% if format == 'Book' && online_url(@document) &&  @group.nil? %>
      <% oclc_number=oclc_number_link %>
