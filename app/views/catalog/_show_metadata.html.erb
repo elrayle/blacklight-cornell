@@ -81,7 +81,12 @@
     <% other_forms = render_display_link :document => @document, :field =>  'other_availability_piped', :format => 'raw' %>
 
     <h3>Also available</h3>
+    <h4>
+    <%= link_to "See all records for this work",'/?f[workid_facet][]='+render_document_show_field_value(:document => @document, :field => 'workid_facet') %>
+    </h4>
+    Or view:
     <ul>
+
     <% other_forms.each do |link,label| %>
     <li>
     <%= link_to link, label %>
