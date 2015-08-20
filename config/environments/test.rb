@@ -1,7 +1,9 @@
 BlacklightCornell::Application.configure do
   # Settings specified here will take precedence over those in config/application.rb
 
-  config.eager_load = true;
+  #config.eager_load = false
+  config.eager_load = true
+  #
   # The test environment is used exclusively to run your application's
   # test suite. You never need to work with it otherwise. Remember that
   # your test database is "scratch space" for the test suite and is wiped
@@ -9,14 +11,17 @@ BlacklightCornell::Application.configure do
   config.cache_classes = true
 
   # Configure static asset server for tests with Cache-Control for performance
-  config.serve_static_assets = true
+  config.serve_static_files = true
   config.static_cache_control = "public, max-age=3600"
 
   # Log error messages when you accidentally call methods on nil
   config.whiny_nils = true
 
   # Show full error reports and disable caching
-  config.consider_all_requests_local       = true
+  config.consider_all_requests_local = false
+  config.action_dispatch.show_exceptions = true
+
+  #config.consider_all_requests_local       = true
   config.action_controller.perform_caching = false
 
   # Raise exceptions instead of rendering exception templates
@@ -36,5 +41,7 @@ BlacklightCornell::Application.configure do
 
   # Print deprecation notices to the stderr
   config.active_support.deprecation = :stderr
+
+  config.log_level = ENV["LOG_LEVEL"].blank?  ? :debug : ENV["LOG_LEVEL"].to_sym
 
 end

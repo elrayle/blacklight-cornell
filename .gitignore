@@ -12,6 +12,7 @@
 
 # Ignore the default SQLite database.
 /db/*.sqlite3
+/db/*.sqlite
 
 # Ignore all logfiles and tempfiles.
 /log/*.log
@@ -23,5 +24,12 @@ config/newrelic.yml
 # Ignore precompiled assets
 public/assets
 # Ignore ENV file.
-/.env
+/.env*
 
+/config/database.yml
+
+.ruby-gemset
+.idea
+vendor
+
+/profile

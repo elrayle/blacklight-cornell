@@ -1,5 +1,6 @@
 module CornellCatalogHelper
  require "pp"
+ require "maybe"
 
   # Determine if user query can be expanded to WCL & Summon
   def expandable_search?
@@ -105,6 +106,7 @@ module CornellCatalogHelper
     items2 = document[:item_record_display].present? ? document[:item_record_display].map { |item| JSON.parse(item).with_indifferent_access } : Array.new
     bibid = document[:id]
     response = JSON.parse(HTTPClient.get_content(Rails.configuration.voyager_holdings + "/holdings/status_short/#{bibid}")).with_indifferent_access
+    @response = response
     # items might differ slightly from direct db response.
     # reconcile the two into a grand synthesis of merged info 
     #items  = items2
@@ -112,6 +114,8 @@ module CornellCatalogHelper
     Rails.logger.debug "\nes287_debug file:#{__FILE__} line:#{__LINE__}  merged items = " + items.inspect 
     Rails.logger.debug "\nes287_debug file:#{__FILE__} line:#{__LINE__}  merged items solr = " + items_solr.inspect 
     Rails.logger.debug "\nes287_debug file:#{__FILE__} line:#{__LINE__}  response status/short/#{bibid}= " + response.inspect 
+    @current_hldgs = response["#{bibid}"]["#{bibid}"]["records"][0]
+    Rails.logger.debug "\nes287_debug file:#{__FILE__} line:#{__LINE__} holdings/#{bibid}= " + @current_hldgs.inspect 
     if (!response["#{bibid}"]["#{bibid}"]["records"].nil? && !response["#{bibid}"]["#{bibid}"]["records"][0].nil? &&  !response["#{bibid}"]["#{bibid}"]["records"][0]["current_suppl"].nil?) 
       Rails.logger.debug "\nes287_debug file:#{__FILE__} line:#{__LINE__}  status_short current_suppl in response = " + response["#{bibid}"]["#{bibid}"]["records"][0]["current_suppl"].inspect 
       @current_suppl = response["#{bibid}"]["#{bibid}"]["records"][0]["current_suppl"] 
@@ -145,7 +149,7 @@ module CornellCatalogHelper
           hrdJSON = JSON.parse(hrd).with_indifferent_access
           Rails.logger.debug "\nes287_debug file:#{__FILE__} line:#{__LINE__} hrdJSON  = " + hrdJSON.inspect 
           callnumber = "" 
-          callnumber = hrdJSON["callnos"][0] unless  hrdJSON["callnos"].blank?		
+          callnumber = hrdJSON["callnos"][0] unless  hrdJSON["callnos"].blank?    
           id = hrdJSON[:id]
           hrds[id]  =  hrdJSON
           notes = hrdJSON[:notes]
@@ -165,15 +169,18 @@ module CornellCatalogHelper
             oneloc["holding_id"] = [id] 
             mfhd_id = id.to_i 
             oneloc["call_number"] = callnumber
+            if callnumber.blank?  && !@current_hldgs.nil? && !@current_hldgs['call_number'].blank?
+              oneloc["call_number"] = @current_hldgs['call_number']
+            end
             oneloc["copies"] = []
             oneloc["notes"] = "Notes: " + notes.join(' ') unless notes.blank? 
             notes_by_mid[id.to_s] = oneloc["notes"]
             oneloc["summary_holdings"]="Library has: " + summary_holdings.join(' ') unless summary_holdings.blank? 
             oneloc["supplements"]=suppl_holdings.join(';') unless suppl_holdings.blank? 
             if (!@current_suppl.nil?) 
-              if !(@current_suppl.select{|x| x["MFHD_ID"] ==  mfhd_id  && x["PREDICT"] == 'Y'}).blank?
+              if !(@current_suppl.select{|x| x["MFHD_ID"] ==  mfhd_id  && ( x["PREDICT"] == 'Y' || x["PREDICT"] == 'S')}).blank?
                 Rails.logger.debug "\nes287_debug **** #{__FILE__}:#{__LINE__} selected current  = " +  (@current_suppl.select{|x| x["MFHD_ID"] ==  mfhd_id }).inspect
-                cur =  (@current_suppl.select{|x| x["MFHD_ID"] ==  mfhd_id  && x["PREDICT"] == 'Y'}).sort_by{|x| x["ISSUE_ID"]}
+                cur =  (@current_suppl.select{|x| x["MFHD_ID"] ==  mfhd_id  && (x["PREDICT"] == 'Y' || x["PREDICT"] == 'S')}).sort_by{|x| x["ISSUE_ID"]}
                 Rails.logger.debug "\nes287_debug **** #{__FILE__}:#{__LINE__} sorted current  = " +  cur.inspect
                 currev = cur.reverse.map{|x| x["ENUMCHRON"]}.join(";") 
                 Rails.logger.debug "\nes287_debug **** #{__FILE__}:#{__LINE__} sorted and reversed  = " +  currev.inspect
@@ -237,7 +244,11 @@ module CornellCatalogHelper
     Rails.logger.debug "\nes287_debug #{__LINE__} condensed full (after fix notes) = " + condensed_full.inspect 
     zcondensed_full = fix_permtemps(bibid,condensed_full,response)
     Rails.logger.debug "\nes287_debug #### #{__FILE__} #{__LINE__} condensed full (after fix perm temps) = " + zcondensed_full.inspect 
-    ycondensed_full = collapse_locs(zcondensed_full)
+    if ENV['NO_COLLAPSE']
+      ycondensed_full = zcondensed_full
+    else
+      ycondensed_full = collapse_locs(zcondensed_full)
+    end
     Rails.logger.debug "\nes287_debug #{__LINE__} condensed full (after collapse locs) = " + condensed_full.inspect 
     ycondensed_full
   end
@@ -270,6 +281,7 @@ module CornellCatalogHelper
     overinfo = {} 
     ocnt = {} # how many items have an over ridden location, either temp OR perm, indexed by  number
     total = {} # how many items are in a location 
+    Rails.logger.debug "\nes287_debug saved response  file:#{__FILE__} line:(#{__LINE__}) @response= " + @response.inspect 
     Rails.logger.debug "\nes287_debug all holdings records from document  file:#{__FILE__} line:(#{__LINE__}) hrds= " + hrds.inspect 
     Rails.logger.debug "\nes287_debug locnames by lid document  file:#{__FILE__} line:(#{__LINE__}) locnames by lid= " + locnames_by_lid.inspect 
     Rails.logger.debug "\nes287_debug number of items  file:#{__FILE__} line:(#{__LINE__})= " + items.size.to_s 
@@ -277,19 +289,27 @@ module CornellCatalogHelper
       tmploc = {}
       mid = iinfo['mfhd_id']
       Rails.logger.debug "\nes287_debug item  file:#{__FILE__} line:(#{__LINE__}) iinfo= " + iinfo.inspect 
+      Rails.logger.debug "\nes287_debug item  file:#{__FILE__} line:(#{__LINE__}) hrds[mid]= " + hrds[mid].inspect 
+      #
+      next if hrds[mid].nil? 
       Rails.logger.debug "\nes287_debug hrds  file:#{__FILE__} line:(#{__LINE__}) location id = " + hrds[mid]["locations"][0]["number"].to_s 
       lid   =  hrds[mid]["locations"][0]["number"].to_s 
       Rails.logger.debug "\nes287_debug item file:#{__FILE__} line:(#{__LINE__}) mid = " + mid.inspect 
       Rails.logger.debug "\nes287_debug class of permlocation file:#{__FILE__} line:(#{__LINE__}) class = " + iinfo[:perm_location].class.to_s 
+      dispname = ""
+      dcode = " "
       if iinfo[:perm_location].class == ActiveSupport::HashWithIndifferentAccess 
         dcode = iinfo[:perm_location][:number].to_s
         dispname = iinfo[:perm_location][:name] 
       else 
-        dcode = iinfo[:perm_location]
-        dispname = locnames_by_lid[dcode][:display_name]
+        if !iinfo["perm_location"].blank?
+          dcode = iinfo["perm_location"]
+          Rails.logger.debug "\nes287_debug class of permlocation file:#{__FILE__} line:(#{__LINE__}) dcode = " + dcode.inspect 
+          dispname = locnames_by_lid[dcode][:display_name] unless dcode.blank?
+        end
       end 
-      Rails.logger.debug "\nes287_debug dcode file:#{__FILE__} line:(#{__LINE__}) dcode = " + dcode 
-      if dcode != hrds[mid]["locations"][0]["number"].to_s 
+      Rails.logger.debug "\nes287_debug dcode file:#{__FILE__} line:(#{__LINE__}) dcode = " + dcode.inspect 
+      if dcode != " " &&   dcode != hrds[mid]["locations"][0]["number"].to_s
       # if iinfo['perm_location'] != hrds[mid]["locations"][0]["number"].to_s 
         Rails.logger.debug "\nes287_debug item  file:#{__FILE__} line:(#{__LINE__}) OVERRIDDEN  by item perm location = " + iinfo['perm_location'].inspect 
         Rails.logger.debug "\nes287_debug locnames by lid file:#{__FILE__}  line:(#{__LINE__}) = " + locnames_by_lid.inspect 
@@ -303,11 +323,11 @@ module CornellCatalogHelper
         tmploc["holding_id"] = [mid]
         tmploc["chron"] = iinfo[:chron] 
         tmploc["call_number"] = hrds[mid]["callnos"][0] 
-       
         tmploc["copies"] = iinfo[:copy_number] 
         copies = ""
         copies = " c. #{tmploc['copies']} " unless tmploc.blank?
-        tmploc["display"] = tmploc['item_enum'] + ' ' + tmploc['chron'] + copies +  " Shelved in #{dispname}"
+        Rails.logger.debug "\nes287_debug #{__FILE__}:#{__LINE__} tmploc = " + tmploc.inspect 
+        tmploc["display"] = Maybe(tmploc['item_enum']) + ' ' + Maybe(tmploc['chron']) + Maybe(copies) +  " Shelved in #{dispname}"
         #oneloc["summary_holdings"] = "Library has: " + summary_holdings.join(' ') unless summary_holdings.blank?
         Rails.logger.debug "\nes287_debug line(#{__LINE__}) item = " + iinfo.inspect
         Rails.logger.debug "\nes287_debug line(#{__LINE__}) tmploc = " + tmploc.inspect
@@ -319,8 +339,8 @@ module CornellCatalogHelper
           over[mid] << tmploc["display"] 
          end
       end
-      if (iinfo['temp_location'] != "0"  ) && iinfo['temp_location'] != hrds[mid]["locations"][0]["number"].to_s 
-        Rails.logger.debug "\nes287_debug item line:(#{__LINE__} OVERRIDDEN  item temp location = " + iinfo['temp_location']
+      if (!iinfo['temp_location'].blank? && iinfo['temp_location'] != "0"  ) && iinfo['temp_location'] != hrds[mid]["locations"][0]["number"].to_s 
+        Rails.logger.debug "\nes287_debug item line:(#{__LINE__} OVERRIDDEN  item temp location = " + iinfo['temp_location'].inspect
         dispname = locnames_by_lid[iinfo[:temp_location]][:display_name]
         ocnt[lid]  =  ocnt[lid].blank? ?  1 : ocnt[lid]+1   
         total[lid]  =  total[lid].blank? ?  1 : total[lid]+1   
@@ -402,12 +422,16 @@ module CornellCatalogHelper
       items_by_mid[hk] = {"items"=> {}, "notes"=>notes_by_mid[hk], "summary_holdings"=>sumh_by_mid[hk],
         "current_issues"=>curi,"supplements" => supl , "indexes"=> indx }
     end
-    #Rails.logger.debug "\nes287_debug items by mid = " + items_by_mid.inspect 
     # insert item info into correct place into condensed array 
+    Rails.logger.debug "\nes287_debug File:#{__FILE__}:line:#{__LINE__} items_by_mid  = #{items_by_mid.inspect}"
+    Rails.logger.debug "\nes287_debug File:#{__FILE__}:line:#{__LINE__} condensed  = #{condensed.inspect}"
     items_by_mid.each_key do |hk|
+      Rails.logger.debug "\nes287_debug File:#{__FILE__}:line:(#{__LINE__}) hk  = #{hk}"
+      next if  hk.nil?
+      next if  items_by_mid[hk].nil?
+      next if  condensed[hk].nil?
       #condensed[condn_by_mid[hk]]["copies"] << items_by_mid[hk] 
-      condensed[hk]["copies"] << items_by_mid[hk] 
-      Rails.logger.debug "\nes287_debug line:(#{__LINE__}) hk  = #{hk}"
+      condensed[hk]["copies"] << items_by_mid[hk]  
       if !over_locs[hk].blank?
         Rails.logger.debug "\nes287_debug line:(#{__LINE__}) over_locs[hk]  = #{over_locs[hk]}"
         #condensed[condn_by_mid[hk]]["copies"][0]["temp_locations"]  = over_locs[hk] 
@@ -489,16 +513,28 @@ module CornellCatalogHelper
       sdate = holding[:ITEM_STATUS_DATE].to_s.slice(0,10)
       date = holding[:CURRENT_DUE_DATE].blank? ? holding[:ITEM_STATUS_DATE].to_s.slice(0,10)  : holding[:CURRENT_DUE_DATE].to_s.slice(0,10)  
       solri = items_solr[holding[:ITEM_ID].to_s]
+      Rails.logger.debug "es287_debug #{__FILE__} #{__LINE__} solri = #{solri.inspect}\n"
       reqs = "0"
+      #copy = solri['copy_number'].blank? ? "" : " c. #{solri['copy_number']}"
       if !solri.nil?
-        copy = solri['copy_number'].blank? ? "" : " c. #{solri['copy_number']}"
-        enum = solri["item_enum"] + ' ' + solri["chron"]+copy
+      copy = solri['copy_number'].blank? ? "" : " c. #{solri['copy_number']}"
+        if  solri['item_enum'].blank? 
+          enum = "#{holding[:ITEM_ENUM]}  #{holding[:CHRON]} #{copy}"
         Rails.logger.debug "es287_debug #{__FILE__} #{__LINE__} solri = #{solri.inspect}\n"
-        reqs = solri["reqs"] 
+        Rails.logger.debug "es287_debug #{__FILE__} #{__LINE__} enum = #{enum.inspect}\n"
+        else 
+          enum = solri['item_enum'] + ' ' + solri['chron']+copy
+        Rails.logger.debug "es287_debug #{__FILE__} #{__LINE__} solri = #{solri.inspect}\n"
+        Rails.logger.debug "es287_debug #{__FILE__} #{__LINE__} enum = #{enum.inspect}\n"
+        end
+        reqs = solri['reqs'] 
+        Rails.logger.debug "es287_debug #{__FILE__} #{__LINE__} solri = #{solri.inspect}\n"
+        Rails.logger.debug "es287_debug #{__FILE__} #{__LINE__} enum = #{enum.inspect}\n"
       end
       norr = reqs == '0' ? 'n' : 'r'
       status =  ITEM_STATUS_CODES[holding[:ITEM_STATUS].to_s + norr].nil?  ?  "Status #{holding[:ITEM_STATUS].to_s} " : ITEM_STATUS_CODES[holding[:ITEM_STATUS].to_s + norr]['short_message']
-      Rails.logger.debug "es287_debug #{__FILE__} #{__LINE__} status = #{status.inspect}\n"
+      Rails.logger.debug "es287_debug #{__FILE__}:#{__LINE__} status = #{status.inspect}\n"
+      Rails.logger.debug "es287_debug #{__FILE__}:#{__LINE__} enum = #{enum.inspect}\n"
       status_text =  status.gsub('%ENUM',enum)
       status_text =  status_text.gsub('%SDATE',sdate)
       status_text =  status_text.gsub('%DATE',date)
@@ -676,8 +712,20 @@ module CornellCatalogHelper
   Rails.logger.debug "\nes287_debug items_db line(#{__LINE__}) =   " + items_db.inspect  
   items_db.each_key do |iid|
     if items_solr.has_key?(iid)
-      Rails.logger.debug "\nes287_debug items_db iid line(#{__LINE__}) =   " + iid.inspect  
-      Rails.logger.debug "\nes287_debug items_db[iid] line(#{__LINE__}) =   " + items_db[iid].inspect  
+      Rails.logger.debug "\nes287_debug items_solr[iid] #{__FILE__} line(#{__LINE__}) =   " + items_solr[iid].inspect  
+    end
+    if !iid.nil?  && !items_solr.has_key?(iid)
+      items_solr[iid] = {}
+      items_solr[iid]["mfhd_id"] = items_db[iid]["MFHD_ID"].to_s  
+      items_solr[iid]["item_id"] = iid.to_s  
+      items_solr[iid]["call_number"] = items_db[iid]['DISPLAY_CALL_NO']
+      items_solr[iid]["chron"] = ' ';   
+      items_solr[iid]["item_enum"] = ' ';   
+      items_solr[iid]["copies"] = ' ';   
+    end
+    if items_solr.has_key?(iid)
+      Rails.logger.debug "\nes287_debug items_db iid #{__FILE__} line(#{__LINE__}) =   " + iid.inspect  
+      Rails.logger.debug "\nes287_debug items_db[iid] #{__FILE__} line(#{__LINE__}) =   " + items_db[iid].inspect  
       items_solr[iid]["temp_location"] = items_db[iid]["TEMP_LOCATION_ID"].to_s  unless items_db[iid]["TEMP_LOCATION_ID"].to_s.blank? 
       items_solr[iid]["temp_location_display_name"] = items_db[iid]["TEMP_LOCATION_DISPLAY_NAME"].to_s  unless items_db[iid]["TEMP_LOCATION_ID"].to_s.blank? 
       items_solr[iid]["temp_location_code"] = items_db[iid]["TEMP_LOCATION_CODE"].to_s  unless items_db[iid]["TEMP_LOCATION_ID"].to_s.blank? 
@@ -685,12 +733,24 @@ module CornellCatalogHelper
       items_solr[iid]["perm_location_display_name"] = items_db[iid]["PERM_LOCATION_DISPLAY_NAME"] 
       items_solr[iid]["perm_location_code"] = items_db[iid]["PERM_LOCATION_CODE"] 
       items_solr[iid]["current_due_date"] = (items_db[iid]["CURRENT_DUE_DATE"].nil? )  ?  ''  :  items_db[iid]["CURRENT_DUE_DATE"].to_s
-      items_solr[iid]["reqs"] = (items_db[iid]["RECALLS_PLACED"] +  items_db[iid]["HOLDS_PLACED"]).to_s
+      rcp = items_db[iid]["RECALLS_PLACED"].nil? ? 0 :  items_db[iid]["RECALLS_PLACED"]  
+      hop = items_db[iid]["HOLDS_PLACED"].nil? ? 0 :  items_db[iid]["HOLDS_PLACED"]  
+      items_solr[iid]["reqs"] = (hop+rcp).to_s
+      if items_solr[iid]["chron"].blank?   
+        items_solr[iid]["chron"] = ' ';   
+      end
+      if items_solr[iid]["item_enum"].blank?   
+        items_solr[iid]["item_enum"] = ' ';   
+      end
     end
   end
   Rails.logger.debug "\nes287_debug document response by iid line(#{__LINE__}) =   " + items_db.inspect 
-  items_solr.each_key do |iid|
-    items2 << items_solr[iid]
+  items_db.each_key do |iid|
+    if items_solr.has_key?(iid)
+      items2 << items_solr[iid]
+    else
+      items2 << items_db[iid]
+    end
   end
   Rails.logger.debug "\nes287_debug reflattened solr line(#{__LINE__}) =   " + items2.inspect 
   return items2,items_solr
@@ -748,7 +808,7 @@ module CornellCatalogHelper
     if iarray.nil? 
       return con_full
     end
-    Rails.logger.debug "\nes287_debug fix_perm: #{__FILE__} line(#{__LINE__}) iarray=#(iarray.inspect}\n"  
+    Rails.logger.debug "\nes287_debug fix_perm: #{__FILE__} line(#{__LINE__}) iarray=#{iarray.inspect}\n"  
     iarray.each do |ite|
       items << JSON.parse(ite)
     end 
@@ -768,7 +828,7 @@ module CornellCatalogHelper
               hso['perm_location']['code'] = hdb['PERM_LOCATION_CODE']
               hso['perm_location']['name'] = hdb['PERM_LOCATION_DISPLAY_NAME']
               hso['perm_location']['library'] = hdb['PERM_LOCATION_DISPLAY_NAME']
-	      if hdb['TEMP_LOCATION_ID'] != 0
+        if hdb['TEMP_LOCATION_ID'] != 0
                    hso['temp_location'] = {} 
                    hso['temp_location']['code'] = hdb['TEMP_LOCATION_CODE']
                    hso['temp_location']['number'] = hdb['TEMP_LOCATION_ID']
@@ -987,6 +1047,17 @@ module CornellCatalogHelper
     end
     cond2
   end #def collapse_locs
+
+  def facet_field_labels
+ # this was D*EPRECATED
+     Hash[*blacklight_config.facet_fields.map { |key, facet| [key, facet.label] }.flatten]
+  end
+
+  def  cornell_item_page_entry_info
+    t('blacklight.search.entry_pagination_info.other', 
+      :current => number_with_delimiter(search_session['counter']), :total => number_with_delimiter(search_session[:total]), 
+      :count => search_session[:total].to_i).html_safe
+  end
 
 end # End of Module
 

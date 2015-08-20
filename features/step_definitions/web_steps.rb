@@ -2,16 +2,34 @@ Given /^(?:|I )am on (.+)$/ do |page_name|
   visit path_to(page_name)
 end
 
-When /^(?:|I )fill in "([^"]*)" with "([^"]*)"$/ do |field, value|
+When /^(?:|I )fill in "([^"]*)" with ["']([^"]*)["']$/ do |field, value|
   fill_in(field, :with => value)
 end
 
 When /^(?:|I )press '([^"]*)'$/ do |button|
-  click_button button
+
+  if button == 'search'
+    page.find(:css, 'button#search-btn').click
+  else
+    click_button button
+  end
+end
+
+When /^(?:|I )press "([^"]*)"$/ do |button|
+
+  if button == 'search'
+    page.find(:css, 'button#search-btn').click
+  else
+    click_button button
+  end
 end
 
 When /^(?:|I )go to (.+)$/ do |page_name|
   visit path_to(page_name)
+end
+
+When /^(?:|I )literally go to (.+)$/ do |page_name|
+  visit page_name
 end
 
 Then /^(?:|I )should be on (.+)$/ do |page_name|
@@ -25,4 +43,16 @@ end
 
 Then /^show me the page$/ do
   print page.html
+end
+
+Then /^I should not see an error$/ do
+  (200 .. 399).should include(page.status_code)
+end
+
+Then /^I should see an error$/ do
+  (400 .. 599).should include(page.status_code)
+end
+
+Then(/^I sleep (\d+) seconds$/) do |wait_seconds|
+  sleep wait_seconds.to_i 
 end

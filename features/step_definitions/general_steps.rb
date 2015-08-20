@@ -24,8 +24,15 @@ end
 Then /^I should see the text '(.*?)'$/i do |text|
   page.should have_content(text)
 end
+Then /^I should see the text "(.*?)"$/i do |text|
+  page.should have_content(text)
+end
 
 Then /^I should not see the text '(.*?)'$/i do |text|
+  page.should_not have_content(text)
+end
+
+Then /^I should not see the text "(.*?)"$/i do |text|
   page.should_not have_content(text)
 end
 
@@ -40,6 +47,11 @@ Then /I should see "(.*)" (at least|at most|exactly) (.*) times?$/i do |target, 
       actual_num.should == expected_num.to_i
   end
 end
+
+Then /I should select checkbox "(.*)"$/i do |target|
+  find(:css, "\##{target}").set(true)
+end
+
 
 # Then /I should see a "(.*)" element with "(.*)" = "(.*)" (at least|at most|exactly) (.*) times?$/i do |target, type, selector,comparator, expected_num|
 #   actual_num = page.all("#{target}[#{type}=\"#{selector}\"]").length

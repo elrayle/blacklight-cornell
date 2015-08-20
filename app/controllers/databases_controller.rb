@@ -2,7 +2,13 @@
 class DatabasesController < ApplicationController
   include Blacklight::Catalog
   include BlacklightCornell::CornellCatalog
-  include BlacklightUnapi::ControllerExtension
+  #include BlacklightUnapi::ControllerExtension
+  before_filter :heading
+  
+  def heading
+   @heading='Databases'
+  end
+
 
   def subject
      clnt = HTTPClient.new
@@ -22,7 +28,6 @@ class DatabasesController < ApplicationController
     @subjectCoreResponse = eval(@subjectCoreString)
     @subjectCore = @subjectCoreResponse['response']['docs']
      params[:q].gsub!('%20', ' ')
-     Rails.logger.info("Googoo = #{@subject}")
 
     end
 
