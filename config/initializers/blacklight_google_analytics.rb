@@ -4,6 +4,8 @@ when 'development'
   nil
 when 'test'
   nil
+when 'profile'
+  nil
 else
   'UA-8097093-12'
 end

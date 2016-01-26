@@ -30,3 +30,7 @@ staging:
   <<: *defaults
   active: false 
 
+profile:
+  <<: *defaults
+  active: false
+

@@ -57,6 +57,7 @@ class BookmarksController < CatalogController
     session[:search]['counter'] = counter + 1
     setup_next_and_previous_bookmarks(bookmarks_id_ordered, counter)
 
+    @collections = Ld4lVirtualCollection::Collection.collections_for_droplist
   end
 
   # For adding a single bookmark, suggest use PUT/#update to

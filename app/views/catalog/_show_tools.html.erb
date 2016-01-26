@@ -1,3 +1,4 @@
+<%- vc_collections = Ld4lVirtualCollection::Collection.collections_for_droplist %>
 <%-
   # Compare with render_document_functions_partial helper, and
   # _document_functions partial. BL actually has two groups
@@ -19,6 +20,23 @@
 <li><%= render :partial => "bookmark_control" , :locals => {:document => @document} %></li>
 <% end %>
 <!-- TODO: TRANSLATE -->
+<li class="dropdown pull-right">
+  <div class="btn-group">
+    <a href="#" class="dropdown-toggle btn btn-mini" data-toggle="dropdown"><i class="fa fa-share"></i>Add to Virtual Collection <b class="caret"></b></a>
+    <ul class="dropdown-menu">
+      <%- vc_collections.each do |collection|   ###  TODO: NEED TO SET @collections%>
+<%- puts("collection=#{collection}") %>
+          <li>
+            <%= link_to collection[:title], ld4l_virtual_collection.collection_items_path(collection[:id],
+                   proxy_for:  main_app.catalog_url(@document)), method: :post,
+                   :onclick => "document.getElementById('it_loading_spinner').style.visibility = 'visible';"
+            %>
+          </li>
+      <% end %>
+    </ul>
+  </div>
+</li>
+
 <% if bookmarks_index || citable %>
   <% citelink_content =  '<i class="fa fa-pencil"></i>' + t('blacklight.tools.cite') %>
   <li>
