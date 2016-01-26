@@ -1,5 +1,5 @@
 source 'https://rubygems.org'
-ruby "2.1.5"
+ruby "2.2.2"
 
 gem 'rails', '4.2.1'
 gem "dotenv-rails"
@@ -42,7 +42,7 @@ gem 'addressable'
   gem 'coffee-rails', '~> 4.0'
 
   # See https://github.com/sstephenson/execjs#readme for more supported runtimes
-   gem 'therubyracer', '~> 0.10.2', :platforms => :ruby
+  #  gem 'therubyracer', '~> 0.10.2', :platforms => :ruby
 
   gem 'uglifier', '>= 1.0.3'
 
@@ -88,7 +88,7 @@ gem 'jquery-ui-rails'
 # Deploy with Capistrano
  gem 'capistrano'
  gem 'capistrano-ext'
- gem 'rvm-capistrano'
+ gem 'rvm-capistrano', require: false
 
 # To use debugger
 # gem 'debugger'
@@ -108,3 +108,55 @@ gem 'mollom'
 #gem 'blacklight-marc'
 gem 'exception_notification'
 gem 'hipchat'
+
+
+
+# gem 'ld4l_virtual_collection', :git => 'git@github.com:ld4l/ld4l_virtual_collection.git', :branch => 'solr_integration'
+gem 'ld4l_virtual_collection', :path => '/Users/elr37/Documents/__DEVELOPMENT__/__LD4L/at_solrizer/ld4l_virtual_collection_2015-08-19-1520'
+
+gem 'rdf', '~> 1.1'
+gem 'active-triples', '0.6.1'
+gem 'active_triples-local_name'
+# gem 'active_triples-solrizer', :git => 'git@github.com:ActiveTriples/active_triples-solrizer.git', :branch => 'modifiers_from_solrizer_gem'
+gem 'active_triples-solrizer', :path => '/Users/elr37/Documents/__DEVELOPMENT__/__LD4L/at_solrizer/active_triples-solrizer'
+
+# gem 'ld4l-foaf_rdf', '~> 0.0'
+# gem 'ld4l-foaf_rdf', :git => 'git@github.com:ld4l/foaf_rdf.git', :branch => 'solr_integration'
+gem 'ld4l-foaf_rdf', :path => '/Users/elr37/Documents/__DEVELOPMENT__/__LD4L/at_solrizer/foaf_rdf_2015-08-20-1630'
+
+# gem 'ld4l-open_annotation_rdf', '~> 0.0'
+# gem 'ld4l-open_annotation_rdf', :git => 'git@github.com:ld4l/open_annotation_rdf.git', :branch => 'solr_integration'
+gem 'ld4l-open_annotation_rdf', :path => '/Users/elr37/Documents/__DEVELOPMENT__/__LD4L/at_solrizer/open_annotation_rdf_2015-08-20-1630'
+
+gem 'doubly_linked_list', '~> 0.0'
+# gem 'ld4l-ore_rdf', '~> 0.0'
+# gem 'ld4l-ore_rdf', :git => 'git@github.com:ld4l/ore_rdf.git', :branch => 'solr_integration'
+gem 'ld4l-ore_rdf', :path => '/Users/elr37/Documents/__DEVELOPMENT__/__LD4L/at_solrizer/ore_rdf_2015-06-24-1600'
+
+# gem 'ld4l-works_rdf', :git => 'git@github.com:ld4l/works_rdf.git', :branch => 'master'
+# gem 'ld4l-works_rdf', :git => 'git@github.com:ld4l/works_rdf.git', :branch => 'solr_integration'
+gem 'ld4l-works_rdf', :path => '/Users/elr37/Documents/__DEVELOPMENT__/__LD4L/at_solrizer/works_rdf_2015-08-22-0900'
+
+
+gem 'httparty'
+
+group :development do
+  # setup sqlite3 as the persistance triplestore for ActiveTriples
+  # gem 'sqlite3'
+  # gem 'rdf-do'
+  # gem 'do_sqlite3'
+  # # setup virtuoso as the persistance triplestore for ActiveTriples
+  # gem 'rdf-virtuoso'
+  # gem 'rdf-blazegraph'
+end
+
+group :profile do
+  gem 'ruby-prof'
+  # gem 'rdf-do'
+  # gem 'do_sqlite3'
+  # gem 'rdf-virtuoso'
+  # gem 'rdf-blazegraph'
+end
+
+# setup blaze graph as the persistance triplestore for ActiveTriples
+gem 'rdf-blazegraph'

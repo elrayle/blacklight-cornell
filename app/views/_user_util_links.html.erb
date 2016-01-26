@@ -1,6 +1,7 @@
 <div class="col-sm-7 col-md-6">
   <ul class="blacklight-nav">
     <% if current_or_guest_user %>
+      <li><a href="<%= ld4l_virtual_collection.my_virtual_collections_path %>">My Virtual Collections</a></li>
     <%  @bookmarks = current_or_guest_user.bookmarks %>
       <li>
         <%= link_to bookmarks_path do %>

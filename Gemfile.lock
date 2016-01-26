@@ -35,6 +35,71 @@ GIT
     borrow_direct (1.2.0.pre1)
       httpclient (~> 2.4)
 
+PATH
+  remote: /Users/elr37/Documents/__DEVELOPMENT__/__LD4L/at_solrizer/active_triples-solrizer
+  specs:
+    active_triples-solrizer (0.2.0)
+      active-triples
+      json
+      rsolr
+      solrizer
+
+PATH
+  remote: /Users/elr37/Documents/__DEVELOPMENT__/__LD4L/at_solrizer/foaf_rdf_2015-08-20-1630
+  specs:
+    ld4l-foaf_rdf (0.0.7)
+      active-triples (= 0.6.1)
+      active_triples-local_name
+      rdf (~> 1.1)
+
+PATH
+  remote: /Users/elr37/Documents/__DEVELOPMENT__/__LD4L/at_solrizer/ld4l_virtual_collection_2015-08-19-1520
+  specs:
+    ld4l_virtual_collection (0.0.1)
+      active-triples (= 0.6.1)
+      active_triples-local_name
+      bootstrap-sass (~> 3.3)
+      doubly_linked_list (~> 0.0)
+      font-awesome-rails
+      jquery-rails
+      ld4l-foaf_rdf (~> 0.0)
+      ld4l-open_annotation_rdf (~> 0.0)
+      ld4l-ore_rdf (~> 0.0)
+      rails (= 4.2.1)
+      rdf (~> 1.1)
+      sass-rails (~> 4.0)
+      turbolinks
+
+PATH
+  remote: /Users/elr37/Documents/__DEVELOPMENT__/__LD4L/at_solrizer/open_annotation_rdf_2015-08-20-1630
+  specs:
+    ld4l-open_annotation_rdf (0.0.12)
+      active-triples (= 0.6.1)
+      active_triples-local_name
+      ld4l-foaf_rdf (~> 0.0)
+      rdf (~> 1.1)
+
+PATH
+  remote: /Users/elr37/Documents/__DEVELOPMENT__/__LD4L/at_solrizer/ore_rdf_2015-06-24-1600
+  specs:
+    ld4l-ore_rdf (0.0.7)
+      active-triples (= 0.6.1)
+      active_triples-local_name
+      doubly_linked_list (~> 0.0)
+      haml
+      haml-rails
+      ld4l-foaf_rdf (~> 0.0)
+      rdf (~> 1.1)
+
+PATH
+  remote: /Users/elr37/Documents/__DEVELOPMENT__/__LD4L/at_solrizer/works_rdf_2015-08-22-0900
+  specs:
+    ld4l-works_rdf (0.0.1)
+      active-triples (= 0.6.1)
+      active_triples-local_name
+      curb
+      rdf (~> 1.1)
+
 GEM
   remote: https://rubygems.org/
   specs:
@@ -57,6 +122,16 @@ GEM
       erubis (~> 2.7.0)
       rails-dom-testing (~> 1.0, >= 1.0.5)
       rails-html-sanitizer (~> 1.0, >= 1.0.1)
+    active-triples (0.6.1)
+      activemodel (>= 3.0.0)
+      activesupport (>= 3.0.0)
+      deprecation (~> 0.1)
+      linkeddata (~> 1.1)
+      rdf (~> 1.1)
+    active_triples-local_name (0.6.0)
+      active-triples
+      activesupport
+      deprecation
     activejob (4.2.1)
       activesupport (= 4.2.1)
       globalid (>= 0.3.0)
@@ -88,6 +163,8 @@ GEM
     autoprefixer-rails (5.2.1.1)
       execjs
       json
+    bcp47 (0.3.3)
+      i18n
     bcrypt (3.1.10)
     bento_search (1.3.0)
       confstruct (~> 1.0)
@@ -126,7 +203,7 @@ GEM
     byebug (5.0.0)
       columnize (= 0.9.0)
     callsite (0.0.11)
-    capistrano (2.15.5)
+    capistrano (2.15.7)
       highline
       net-scp (>= 1.0.0)
       net-sftp (>= 2.0.0)
@@ -171,6 +248,8 @@ GEM
       mime-types (>= 1.16, < 3)
       nokogiri (~> 1.5)
       rails (>= 3, < 5)
+    curb (0.9.1)
+    daemons (1.2.3)
     database_cleaner (1.4.1)
     deprecation (0.2.2)
       activesupport
@@ -189,6 +268,12 @@ GEM
       dotenv (~> 1.0)
     dotenv-rails (1.0.2)
       dotenv (= 1.0.2)
+    doubly_linked_list (0.0.6)
+    ebnf (1.0.0)
+      rdf (~> 1.1)
+      sxp (~> 0.1, >= 0.1.3)
+    equivalent-xml (0.6.0)
+      nokogiri (>= 1.4.3)
     erubis (2.7.0)
     exception_notification (4.1.1)
       actionmailer (>= 3.0.4)
@@ -231,7 +316,7 @@ GEM
       html2haml (>= 1.0.1)
       railties (>= 4.0.1)
     hashie (3.4.1)
-    highline (1.7.2)
+    highline (1.7.8)
     hike (1.2.3)
     hipchat (1.5.2)
       httparty
@@ -257,13 +342,37 @@ GEM
     jquery-ui-rails (5.0.5)
       railties (>= 3.2.16)
     json (1.8.3)
+    json-ld (1.99.0)
+      multi_json (~> 1.11)
+      rdf (~> 1.99)
     kaminari (0.15.0)
       actionpack (>= 3.0.0)
       activesupport (>= 3.0.0)
     language_list (1.1.0)
     libnotify (0.9.1)
       ffi (>= 1.0.11)
-    libv8 (3.3.10.4)
+    link_header (0.0.8)
+    linkeddata (1.99.0)
+      equivalent-xml (~> 0.6)
+      json-ld (~> 1.99)
+      nokogiri (~> 1.6)
+      rdf (~> 1.99)
+      rdf-aggregate-repo (~> 1.99)
+      rdf-isomorphic (~> 1.99)
+      rdf-json (~> 1.1, >= 1.1.2)
+      rdf-microdata (~> 2.0, >= 2.0.2)
+      rdf-n3 (~> 1.99)
+      rdf-rdfa (~> 1.99)
+      rdf-rdfxml (~> 1.1, >= 1.1.5)
+      rdf-reasoner (~> 0.3)
+      rdf-tabular (~> 0.3)
+      rdf-trig (~> 1.99, >= 1.99.0.1)
+      rdf-trix (~> 1.99)
+      rdf-turtle (~> 1.99)
+      rdf-vocab (~> 0.8, >= 0.8.6)
+      rdf-xsd (~> 1.1, >= 1.1.5)
+      sparql (~> 1.99)
+      sparql-client (~> 1.99)
     listen (2.10.0)
       celluloid (~> 0.16.0)
       rb-fsevent (>= 0.9.3)
@@ -291,12 +400,13 @@ GEM
     multi_xml (0.5.5)
     mysql (2.9.1)
     nenv (0.2.0)
+    net-http-persistent (2.9.4)
     net-ldap (0.11)
     net-scp (1.2.1)
       net-ssh (>= 2.6.5)
     net-sftp (2.1.2)
       net-ssh (>= 2.6.5)
-    net-ssh (2.9.2)
+    net-ssh (3.0.2)
     net-ssh-gateway (1.2.0)
       net-ssh (>= 2.6.5)
     nokogiri (1.6.6.2)
@@ -361,6 +471,60 @@ GEM
     rb-inotify (0.9.5)
       ffi (>= 0.5.0)
     rb-readline (0.4.2)
+    rdf (1.99.1)
+      link_header (~> 0.0, >= 0.0.8)
+    rdf-aggregate-repo (1.99.0)
+      rdf (~> 1.99)
+    rdf-blazegraph (0.0.2)
+      rdf (~> 1.99)
+      sparql-client (~> 1.1)
+    rdf-isomorphic (1.99.0)
+      rdf (~> 1.99)
+    rdf-json (1.99.0)
+      rdf (~> 1.99)
+    rdf-microdata (2.0.2)
+      htmlentities (~> 4.3)
+      nokogiri (~> 1.6)
+      rdf (~> 1.1)
+      rdf-xsd (~> 1.1)
+    rdf-n3 (1.99.0)
+      rdf (~> 1.99)
+    rdf-rdfa (1.99.0)
+      haml (~> 4.0)
+      htmlentities (~> 4.3)
+      rdf (~> 1.99)
+      rdf-aggregate-repo (~> 1.1)
+      rdf-xsd (~> 1.1)
+    rdf-rdfxml (1.99.0)
+      htmlentities (~> 4.3)
+      rdf (~> 1.99)
+      rdf-rdfa (~> 1.99)
+      rdf-xsd (~> 1.99)
+    rdf-reasoner (0.3.0)
+      rdf (~> 1.1, >= 1.1.4.2)
+      rdf-turtle (~> 1.1)
+      rdf-vocab (~> 0.8)
+      rdf-xsd (~> 1.1)
+    rdf-tabular (0.3.0)
+      addressable (~> 2.3)
+      bcp47 (~> 0.3, >= 0.3.3)
+      json-ld (~> 1.1)
+      rdf (~> 1.1, >= 1.1.7)
+      rdf-vocab (~> 0.8)
+      rdf-xsd (~> 1.1)
+    rdf-trig (1.99.0.1)
+      ebnf (~> 1.0)
+      rdf (~> 1.99)
+      rdf-turtle (~> 1.99)
+    rdf-trix (1.99.0)
+      rdf (~> 1.1)
+    rdf-turtle (1.99.0)
+      ebnf (~> 1.0)
+      rdf (~> 1.99)
+    rdf-vocab (0.8.7.1)
+      rdf (~> 1.1, >= 1.1.10)
+    rdf-xsd (1.99.0)
+      rdf (~> 1.99)
     responders (2.1.0)
       railties (>= 4.2.0, < 5)
     rsolr (1.0.12)
@@ -386,6 +550,7 @@ GEM
       rspec-mocks (~> 3.2.0)
       rspec-support (~> 3.2.0)
     rspec-support (3.2.2)
+    ruby-prof (0.15.9)
     ruby_parser (3.6.6)
       sexp_processor (~> 4.1)
     rufus-scheduler (3.1.2)
@@ -410,6 +575,23 @@ GEM
     sexp_processor (4.5.1)
     shellany (0.0.1)
     slop (3.6.0)
+    solrizer (3.3.0)
+      activesupport
+      daemons
+      nokogiri
+      stomp
+      xml-simple
+    sparql (1.99.0)
+      builder (~> 3.2)
+      ebnf (~> 1.0)
+      rdf (~> 1.99)
+      rdf-aggregate-repo (~> 1.99)
+      rdf-xsd (~> 1.1)
+      sparql-client (~> 1.1)
+      sxp (~> 0.1)
+    sparql-client (1.99.0)
+      net-http-persistent (~> 2.9)
+      rdf (~> 1.1)
     spork (0.9.0)
     sprockets (2.12.4)
       hike (~> 1.2)
@@ -421,17 +603,19 @@ GEM
       activesupport (>= 3.0)
       sprockets (>= 2.8, < 4.0)
     sqlite3 (1.3.10)
+    stomp (1.3.4)
     summon (2.0.5)
       json
+    sxp (0.1.5)
     textpow (1.4.0)
       plist (>= 3.0.1)
-    therubyracer (0.10.2)
-      libv8 (~> 3.3.10)
     thor (0.19.1)
     thread_safe (0.3.5)
     tilt (1.4.1)
     timers (4.0.1)
       hitimes
+    turbolinks (2.5.3)
+      coffee-rails
     tzinfo (1.2.2)
       thread_safe (~> 0.1)
     uglifier (2.7.1)
@@ -459,6 +643,7 @@ GEM
     websocket-driver (0.5.4)
       websocket-extensions (>= 0.1.0)
     websocket-extensions (0.1.2)
+    xml-simple (1.1.5)
     xpath (2.0.0)
       nokogiri (~> 1.3)
     yaml_db (0.3.0)
@@ -469,6 +654,9 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  active-triples (= 0.6.1)
+  active_triples-local_name
+  active_triples-solrizer!
   activerecord-session_store
   addressable
   appsignal
@@ -494,6 +682,7 @@ DEPENDENCIES
   devise-guests (~> 0.3)
   dotenv-deployment
   dotenv-rails
+  doubly_linked_list (~> 0.0)
   exception_notification
   font-awesome-rails
   guard-rspec
@@ -501,11 +690,17 @@ DEPENDENCIES
   haml
   haml-rails
   hipchat
+  httparty
   httpclient
   jquery-rails
   jquery-ui-rails
   json
   kaminari (= 0.15.0)
+  ld4l-foaf_rdf!
+  ld4l-open_annotation_rdf!
+  ld4l-ore_rdf!
+  ld4l-works_rdf!
+  ld4l_virtual_collection!
   libnotify
   marc
   meta_request
@@ -521,15 +716,17 @@ DEPENDENCIES
   rails (= 4.2.1)
   rb-inotify
   rb-readline (~> 0.4.2)
+  rdf (~> 1.1)
+  rdf-blazegraph
   rspec
   rspec-rails
+  ruby-prof
   rufus-scheduler
   rvm-capistrano
   sass-rails (~> 4.0)
   savon (~> 2.11.1)
   spork (= 0.9.0)
   sqlite3
-  therubyracer (~> 0.10.2)
   uglifier (>= 1.0.3)
   ultraviolet
   unicode
@@ -537,3 +734,6 @@ DEPENDENCIES
   webmock
   webrat
   yaml_db
+
+BUNDLED WITH
+   1.10.5

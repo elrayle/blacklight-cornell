@@ -8,6 +8,7 @@ BlacklightCornell::Application.routes.draw do
 
   Blacklight.add_routes(self)
 
+  get 'metadata/:id', to: 'my_virtual_collections#metadata', as: 'metadata'
 
   #match 'catalog/unapi', :to => "catalog#unapi", :as => 'unapi', :via => [:get]
 
@@ -122,4 +123,7 @@ BlacklightCornell::Application.routes.draw do
 
 
   mount BlacklightCornellRequests::Engine => '/request', :as => 'blacklight_cornell_request'
+
+  mount Ld4lVirtualCollection::Engine => '/vc'
+
 end
