@@ -111,7 +111,7 @@ class MetadataCallback
   end
 
   def self.get_oclc_metadata( uris )
-binding.pry
+# binding.pry
     # ex. Permalink - http://www.worldcat.org/oclc/785874920
     items_metadata = []
     uris.each do |uri|
