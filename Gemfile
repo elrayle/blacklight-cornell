@@ -90,9 +90,9 @@ gem 'jquery-ui-rails'
 # To use debugger
 # gem 'debugger'
 gem 'unicode', :platforms => [:mri_18, :mri_19, :mri_20]
-gem 'devise'
+gem 'devise', '3.5.1'
 gem 'devise-guests', '~> 0.3'
-gem 'bootstrap-sass'
+gem 'bootstrap-sass', '3.2'
 gem 'font-awesome-rails' 
 gem 'blacklight_cornell_requests',:git =>'git@github.com:cul-it/blacklight-cornell-requests.git', :branch => 'master'
 
