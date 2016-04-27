@@ -1,5 +1,5 @@
 GIT
-  remote: git@github.com:ActiveTriples/ActiveTriples.git
+  remote: git://github.com/ActiveTriples/ActiveTriples.git
   revision: a71c9bcab00a1f2494eae010051d16bc249ca1e3
   branch: fix206_exclude_othersubj_preds
   specs:
@@ -9,17 +9,6 @@ GIT
       deprecation (~> 0.1)
       linkeddata (~> 1.99)
       rdf (= 1.99)
-
-GIT
-  remote: git@github.com:ActiveTriples/active_triples-solrizer.git
-  revision: 75479f6efb991bb13a095715bb95415b68d5151d
-  branch: master
-  specs:
-    active_triples-solrizer (0.2.0)
-      active-triples
-      json
-      rsolr
-      solrizer
 
 GIT
   remote: git@github.com:cul-it/blacklight-cornell-advanced-search.git
@@ -60,60 +49,6 @@ GIT
       blacklight (> 3.2)
       rails (~> 4.0)
 
-GIT
-  remote: git@github.com:ld4l/foaf_rdf.git
-  revision: 801890ce462f2dc4223054b122d76644b0867e2c
-  branch: master
-  specs:
-    ld4l-foaf_rdf (0.0.7)
-      active-triples
-      active_triples-local_name
-      rdf
-
-GIT
-  remote: git@github.com:ld4l/ld4l_virtual_collection.git
-  revision: a94b60299d79f96262efab6821e1ca9d9c2ba95e
-  branch: update_to_bc_08-2015
-  specs:
-    ld4l_virtual_collection (0.0.1)
-      active-triples
-      active_triples-local_name
-      bootstrap-sass (~> 3.3.4.1)
-      doubly_linked_list (~> 0.0)
-      font-awesome-rails
-      jquery-rails
-      ld4l-foaf_rdf
-      ld4l-open_annotation_rdf
-      ld4l-ore_rdf
-      rails (= 4.2.1)
-      rdf
-      sass-rails (~> 4.0)
-      turbolinks
-
-GIT
-  remote: git@github.com:ld4l/ore_rdf.git
-  revision: dbbc40d991625129de5d4eb3f91a28b7d35a5892
-  branch: at-solr_integration
-  specs:
-    ld4l-ore_rdf (0.1.0)
-      active-triples
-      active_triples-local_name
-      doubly_linked_list
-      ld4l-foaf_rdf
-      rdf (= 1.99.0)
-
-GIT
-  remote: git@github.com:ld4l/works_rdf.git
-  revision: b1395326a436f35de6a7e0c7d05685e825898d0d
-  branch: upgrade_at0.8
-  specs:
-    ld4l-works_rdf (0.0.1)
-      active-triples
-      active_triples-local_name
-      curb
-      ld4l-foaf_rdf
-      rdf
-
 GEM
   remote: https://rubygems.org/
   specs:
@@ -140,6 +75,11 @@ GEM
       active-triples
       activesupport
       deprecation
+    active_triples-solrizer (0.3.0)
+      active-triples
+      json
+      rsolr
+      solrizer
     activejob (4.2.1)
       activesupport (= 4.2.1)
       globalid (>= 0.3.0)
@@ -209,7 +149,7 @@ GEM
     borrow_direct (1.2.0)
       httpclient (~> 2.4)
     builder (3.2.2)
-    byebug (8.2.4)
+    byebug (8.2.5)
     capistrano (2.15.7)
       highline
       net-scp (>= 1.0.0)
@@ -280,7 +220,7 @@ GEM
     database_cleaner (1.5.3)
     deprecation (0.2.2)
       activesupport
-    devise (4.0.0)
+    devise (4.0.1)
       bcrypt (~> 3.0)
       orm_adapter (~> 0.1)
       railties (>= 4.1.0, < 5.1)
@@ -372,11 +312,44 @@ GEM
       actionpack (>= 3.0.0)
       activesupport (>= 3.0.0)
     language_list (1.1.0)
+    ld4l-foaf_rdf (0.1.0)
+      active-triples
+      active_triples-local_name
+      rdf
     ld4l-open_annotation_rdf (0.1.0)
       active-triples (~> 0.8.2, ~> 0.6, ~> 0.5)
       active_triples-local_name
       ld4l-foaf_rdf (~> 0.0)
       rdf (= 1.99.0)
+    ld4l-ore_rdf (0.2.0)
+      active-triples
+      active_triples-local_name
+      active_triples-solrizer
+      doubly_linked_list
+      ld4l-foaf_rdf
+      rdf (= 1.99.0)
+    ld4l-works_rdf (0.1.0)
+      active-triples
+      active_triples-local_name
+      active_triples-solrizer
+      curb
+      ld4l-foaf_rdf
+      rdf
+    ld4l_virtual_collection (0.1.0)
+      active-triples
+      active_triples-local_name
+      bootstrap-sass (~> 3.3.4.1)
+      doubly_linked_list (~> 0.0)
+      font-awesome-rails
+      jquery-rails
+      ld4l-foaf_rdf
+      ld4l-open_annotation_rdf
+      ld4l-ore_rdf
+      ld4l-works_rdf
+      rails (= 4.2.1)
+      rdf (~> 1.99)
+      sass-rails (~> 4.0)
+      turbolinks
     libnotify (0.9.1)
       ffi (>= 1.0.11)
     link_header (0.0.8)
@@ -569,7 +542,6 @@ GEM
       rspec-mocks (~> 3.4.0)
       rspec-support (~> 3.4.0)
     rspec-support (3.4.1)
-    ruby-prof (0.15.9)
     ruby_parser (3.8.1)
       sexp_processor (~> 4.1)
     rubyntlm (0.3.4)
@@ -653,7 +625,7 @@ GEM
       httpi (~> 2.0)
       mime-types (< 2.0.0)
       nokogiri (>= 1.4.0)
-    webmock (1.24.6)
+    webmock (2.0.0)
       addressable (>= 2.3.6)
       crack (>= 0.3.2)
       hashdiff
@@ -677,7 +649,7 @@ PLATFORMS
 DEPENDENCIES
   active-triples!
   active_triples-local_name
-  active_triples-solrizer!
+  active_triples-solrizer (= 0.3.0)
   activerecord-session_store
   addressable
   appsignal
@@ -715,11 +687,11 @@ DEPENDENCIES
   jquery-ui-rails
   json
   kaminari (= 0.15.0)
-  ld4l-foaf_rdf!
-  ld4l-open_annotation_rdf (~> 0.1)
-  ld4l-ore_rdf!
-  ld4l-works_rdf!
-  ld4l_virtual_collection!
+  ld4l-foaf_rdf (= 0.1.0)
+  ld4l-open_annotation_rdf (= 0.1.0)
+  ld4l-ore_rdf (= 0.2.0)
+  ld4l-works_rdf (= 0.1.0)
+  ld4l_virtual_collection (= 0.1.0)
   libnotify
   marc
   mollom
@@ -737,7 +709,6 @@ DEPENDENCIES
   rdf-blazegraph
   rspec
   rspec-rails
-  ruby-prof
   rufus-scheduler
   rvm-capistrano
   sass-rails (~> 4.0)
