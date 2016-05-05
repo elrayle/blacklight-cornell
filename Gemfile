@@ -105,7 +105,7 @@ gem 'mollom'
 
 
 gem 'rdf', '~> 1.99'
-gem 'active-triples', :github => 'ActiveTriples/ActiveTriples', :branch => 'fix206_exclude_othersubj_preds'
+gem 'active-triples', '= 0.8.3'
 gem 'active_triples-local_name'
 gem 'active_triples-solrizer', '= 0.3.0'
 
